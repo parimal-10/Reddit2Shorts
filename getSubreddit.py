@@ -1,10 +1,9 @@
 import random 
 
-def getRandomSubreddit():
-    return random.choice(listOfSubreddits)
+def get_random_subreddit():
+    return random.choice(list_Of_subreddits)
 
-listOfSubreddits = [
-    'askreddit',
+list_Of_subreddits = [
     'confession',
     'amitheasshole',
     'confessions'
