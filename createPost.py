@@ -4,8 +4,6 @@ from os import listdir
 from os.path import isfile, join
 
 def createVideo():
-    outputDir = getConfig.get_current_directory()
-
     script = getRedditPosts.get_content()
     
     if(script == None):
@@ -53,7 +51,7 @@ def createVideo():
     # Write output to file
     print("Rendering final video...")
     bitrate, threads = getConfig.get_video_config()
-    outputFile = f"{outputDir}/{id}.mp4"
+    outputFile = f"{getConfig.get_generated_video_directory()}/{id}.mp4"
     final.write_videofile(
         outputFile, 
         codec = 'mpeg4',

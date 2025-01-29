@@ -13,6 +13,9 @@ def get_voice_over_directory():
 def get_screenshot_directory():
     return get_current_directory() + "/screenshot"
 
+def get_generated_video_directory():
+    return get_current_directory() + "/generatedVideos"
+
 def get_screen_config():
     return 400, 800
 
