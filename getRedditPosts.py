@@ -16,7 +16,12 @@ def __init_reddit():
     return reddit
 
 def get_content():
-    reddit = __init_reddit()
+    try:
+        reddit = __init_reddit()
+    except:
+        print("Error creating a reddit instance")
+        return None
+    
     existingVideos = __get_existing_post_ids(getConfig.get_ids_storage_file())
     posts = []
 
@@ -44,7 +49,7 @@ def get_content():
 
 def __get_content_from_posts(posts):
     submission = random.choice(posts)
-    print("random choice decided")
+    print("random submission selected")
     print(submission.id, submission.url)
     content = getVideoScript.VideoScript(submission.title, submission.selftext, submission.id, submission.url)
 
@@ -59,15 +64,18 @@ def __get_content_from_posts(posts):
 
     return content
 
-def save_post_ids(post_ids, filename):
-    existing_ids = __get_existing_post_ids(filename)
-    updated_ids = list(set(existing_ids + post_ids))
-    with open(filename, "w") as file:
-        json.dump(updated_ids, file)
+def save_post_ids(post_id, fileName):
+    ids = __get_existing_post_ids(fileName)
+    ids.append(post_id)
+    with open(fileName, "w") as file:
+        json.dump(ids, file)
 
-def __get_existing_post_ids(filename):
+def __get_existing_post_ids(fileName):
+    if not os.path.exists(fileName) or os.stat(fileName).st_size == 0:
+        return []
+    
     try:
-        with open(filename, "r") as file:
+        with open(fileName, "r") as file:
             return json.load(file)
     except FileNotFoundError:
         return []

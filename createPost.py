@@ -4,20 +4,32 @@ from os import listdir
 from os.path import isfile, join
 
 def createVideo():
-    script = getRedditPosts.get_content()
+    try:
+        script = getRedditPosts.get_content()
+    except:
+        print("Error getting the videoscript")
+        return None
     
     if(script == None):
-        return createVideo()
-    print("get_content() executed")
+        return None
+    
     id = script.get_script_id()
 
-    getScreenshot.getPostScreenshots(id, script)
+    try:
+        getScreenshot.getPostScreenshots(id, script)
+    except:
+        print("Error getting the screenshots")
+        return None
 
     bgVideo = getConfig.get_bgvideo_filename()
 
-    backgroundVideo = VideoFileClip(
-        filename=bgVideo, 
-        audio=False).subclipped(0, script.get_duration())
+    try:
+        backgroundVideo = VideoFileClip(
+            filename=bgVideo, 
+            audio=False).subclipped(0, script.get_duration())
+    except:
+        print("Error creating the background video")
+        return None
     
     w, h = backgroundVideo.size
 
@@ -41,14 +53,12 @@ def createVideo():
 
     contentOverlay = concatenate_videoclips(clips).with_position(("center", "center"))
 
-    # Compose background/foreground
     final = CompositeVideoClip(
         clips=[backgroundVideo, contentOverlay], 
         size=backgroundVideo.size).with_audio(contentOverlay.audio)
     final.duration = script.get_duration()
     final.with_fps(backgroundVideo.fps)
 
-    # Write output to file
     print("Rendering final video...")
     bitrate, threads = getConfig.get_video_config()
     outputFile = f"{getConfig.get_generated_video_directory()}/{id}.mp4"
@@ -59,6 +69,8 @@ def createVideo():
         bitrate = bitrate
     )
 
+    saveFile = getConfig.get_ids_storage_file()
 
-if __name__ == "__main__":
-    createVideo()
+    getRedditPosts.save_post_ids(id, saveFile)
+
+    return id

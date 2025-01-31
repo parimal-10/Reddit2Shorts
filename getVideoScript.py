@@ -3,7 +3,7 @@ from moviepy import AudioFileClip # type: ignore
 
 MAX_WORDS_PER_COMMENT = 50
 MIN_COMMENTS_FOR_FINISH = 1
-MIN_DURATION = 15
+MIN_DURATION = 30
 MAX_DURATION = 58
 
 class VideoScript:

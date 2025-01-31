@@ -6,5 +6,8 @@ def get_random_subreddit():
 list_Of_subreddits = [
     'confession',
     'amitheasshole',
-    'confessions'
+    'confessions',
+    'jokes',
+    'advice',
+    'whatdoido'
 ]

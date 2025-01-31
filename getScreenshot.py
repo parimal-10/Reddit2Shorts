@@ -38,20 +38,28 @@ def __setup_driver(url):
     driver.set_window_size(width=screenW, height=screenH)
     driver.get(url)
 
-    time.sleep(10)
-
+    time.sleep(3)
     try:
-        # Repeatedly check for the close button (max 5 seconds)
-        for _ in range(10):  
+        iframes = driver.find_elements(By.TAG_NAME, "iframe")
+        print(f"Found {len(iframes)} iframes")
+
+        for iframe in iframes:
+            driver.switch_to.frame(iframe)
+            print("Switched to an iframe")
+
             try:
-                close_button = driver.find_element(By.XPATH, '//*[@id="close"]')
-                if close_button.is_displayed():
-                    close_button.click()
-                    print("Closed login popup.")
-                    break
+                close_button = wait.until(EC.element_to_be_clickable((By.ID, "close")))
+                close_button.click()
+                print("Closed login popup inside iframe.")
+                time.sleep(3)
+                break
             except:
-                time.sleep(0.5)  # Wait and retry
+                driver.switch_to.default_content()
+
+        driver.switch_to.default_content()
+
     except Exception as e:
         print("No login popup found or could not close it.", e)
 
     return driver, wait
+
